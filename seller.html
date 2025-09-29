@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Seller</title>
+  <link rel="stylesheet" href="seller.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Add New Seller</h1>
+    <form id="sellerForm">
+      <label>Company Name:</label>
+      <input type="text" id="companyName" required>
+
+      <label>Contact Person:</label>
+      <input type="text" id="contactPerson">
+
+      <label>Mobile Number:</label>
+      <input type="text" id="mobileNumber" required maxlength="10">
+
+      <label>GPay Number:</label>
+      <input type="text" id="gpayNumber">
+
+      <label>Account Number:</label>
+      <input type="text" id="accountNumber">
+
+      <label>GST Number:</label>
+      <input type="text" id="gstNumber">
+
+      <label>Address:</label>
+      <textarea id="address" required></textarea>
+
+      <label>Type of Plastics Sold:</label>
+      <input type="text" id="plasticType">
+
+      <button type="submit">Add Seller</button>
+    </form>
+
+    <div id="message"></div>
+
+    <!-- <h2>Seller List</h2> -->
+    <ul id="sellerList"></ul>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

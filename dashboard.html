@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - RenewPoly</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1>RenewPoly Dashboard</h1>
+  </header>
+
+  <nav class="dashboard-nav">
+    <button class="tab-btn active" data-report="buy-monthly">Monthly Buy</button>
+    <button class="tab-btn" data-report="buy-ytd">YTD Buy</button>
+    <button class="tab-btn" data-report="buy-full">Full Buy</button>
+    <button class="tab-btn" data-report="sell-monthly">Monthly Sell</button>
+    <button class="tab-btn" data-report="sell-ytd">YTD Sell</button>
+    <button class="tab-btn" data-report="sell-full">Full Sell</button>
+    <button class="tab-btn" data-report="expense-monthly">Monthly Expense</button>
+    <button class="tab-btn" data-report="expense-ytd">YTD Expense</button>
+    <button class="tab-btn" data-report="expense-full">Full Expense</button>
+  </nav>
+
+  <main class="dashboard-widgets">
+    <!-- Widget templates -->
+    <div class="widget" id="buy-monthly">
+      <h2>Monthly Buy Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Plastic Type</th>
+            <th>Total Quantity</th>
+            <th>Average Price</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="widget" id="buy-ytd">
+      <h2>Year-to-Date Buy Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Plastic Type</th>
+            <th>Total Quantity</th>
+            <th>Average Price</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="widget" id="buy-full">
+      <h2>Full Buy Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Month</th>
+            <th>Plastic Type</th>
+            <th>Total Quantity</th>
+            <th>Average Price</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Repeat same structure for sell and expense widgets -->
+    <div class="widget" id="sell-monthly">
+      <h2>Monthly Sell Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Plastic Type</th>
+            <th>Total Quantity</th>
+            <th>Average Price</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="widget" id="sell-ytd">
+      <h2>YTD Sell Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Plastic Type</th>
+            <th>Total Quantity</th>
+            <th>Average Price</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="widget" id="sell-full">
+      <h2>Full Sell Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Month</th>
+            <th>Plastic Type</th>
+            <th>Total Quantity</th>
+            <th>Average Price</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="widget" id="expense-monthly">
+  <h2>Monthly Expense Report</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Expense Type</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="widget" id="expense-ytd">
+  <h2>YTD Expense Report</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Expense Type</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="widget" id="expense-full">
+  <h2>Full Expense Report</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Expense Type</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+  <script >
+  document.addEventListener('DOMContentLoaded', () => {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const widgets = document.querySelectorAll('.widget');
+
+  // Show default widget
+  widgets.forEach(w => (w.style.display = 'none'));
+  const defaultWidget = document.getElementById('expense-monthly');
+  if (defaultWidget) defaultWidget.style.display = 'block';
+
+  // Tab click handler
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const reportId = tab.getAttribute('data-report');
+
+      // Toggle active tab
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      // Show selected widget
+      widgets.forEach(w => (w.style.display = 'none'));
+      const widget = document.getElementById(reportId);
+      if (widget) widget.style.display = 'block';
+    });
+  });
+
+  // Load expenses from localStorage and populate dashboard
+  function loadExpenses() {
+    const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+    // --- Monthly Report ---
+    const monthlyTable = document.querySelector('#expense-monthly tbody');
+    monthlyTable.innerHTML = '';
+
+    const monthlyData = {};
+    expenses.forEach(exp => {
+      const date = new Date(exp.expenseDate);
+      const month = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+      const key = `${exp.expenseType}|${month}`;
+      if (!monthlyData[key]) monthlyData[key] = 0;
+      monthlyData[key] += parseFloat(exp.amount);
+    });
+
+    for (let key in monthlyData) {
+      const [type, month] = key.split('|');
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${type}</td><td>${monthlyData[key].toFixed(2)}</td>`;
+      monthlyTable.appendChild(row);
+    }
+
+    // --- YTD Report ---
+    const ytdTable = document.querySelector('#expense-ytd tbody');
+    ytdTable.innerHTML = '';
+    const ytdData = {};
+    expenses.forEach(exp => {
+      const date = new Date(exp.expenseDate);
+      const year = date.getFullYear();
+      const month = date.toLocaleString('default', { month: 'long' });
+      const key = `${year}-${month}|${exp.expenseType}`;
+      if (!ytdData[key]) ytdData[key] = 0;
+      ytdData[key] += parseFloat(exp.amount);
+    });
+
+    for (let key in ytdData) {
+      const [ym, type] = key.split('|');
+      const [year, month] = ym.split('-');
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${month}</td><td>${type}</td><td>${ytdData[key].toFixed(2)}</td>`;
+      ytdTable.appendChild(row);
+    }
+
+    // --- Full Report ---
+    const fullTable = document.querySelector('#expense-full tbody');
+    fullTable.innerHTML = '';
+    const fullData = {};
+    expenses.forEach(exp => {
+      const date = new Date(exp.expenseDate);
+      const year = date.getFullYear();
+      const month = date.toLocaleString('default', { month: 'long' });
+      const key = `${year}-${month}|${exp.expenseType}`;
+      if (!fullData[key]) fullData[key] = 0;
+      fullData[key] += parseFloat(exp.amount);
+    });
+
+    for (let key in fullData) {
+      const [ym, type] = key.split('|');
+      const [year, month] = ym.split('-');
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${year}</td><td>${month}</td><td>${type}</td><td>${fullData[key].toFixed(2)}</td>`;
+      fullTable.appendChild(row);
+    }
+  }
+
+  loadExpenses();
+
+  // Optional: update dashboard live when navigating from expense page
+  window.addEventListener('storage', loadExpenses);
+});
+
+
+
+
+</script>
+</body>
+</html>

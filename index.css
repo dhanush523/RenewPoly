@@ -1,0 +1,160 @@
+/* ---------- GLOBAL RESET ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ---------- BODY ---------- */
+body {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #c3f0d6, #f0fff6);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ---------- HEADER ---------- */
+header {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 100px;
+}
+
+header h1 {
+  font-size: 3rem;
+  color: #056b34;
+  letter-spacing: 1px;
+}
+
+header p {
+  color: #333;
+  font-size: 1rem;
+  margin-top: 6px;
+}
+
+/* ---------- MAIN ---------- */
+main {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ---------- GRID ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 50px;
+}
+
+/* ---------- CARD ---------- */
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  outline: none;
+}
+
+.card:hover,
+.card:focus {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.icon {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+  color: #056b34;
+}
+
+.card h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #056b34;
+  line-height: 1.3;
+}
+
+/* ---------- ICON COLORS ---------- */
+.icon-expense i { color: #ff6b6b; }
+.icon-seller i { color: #1dd1a1; }
+.icon-buyer i { color: #54a0ff; }
+.icon-buy i { color: #feca57; }
+.icon-sell i { color: #ee5253; }
+.icon-dashboard i { color: #5f27cd; }
+
+/* ---------- RESPONSIVE ---------- */
+
+/* Small Tablets & Large Phones */
+@media (max-width: 900px) {
+  header h1 {
+    font-size: 2.4rem;
+  }
+
+  .grid {
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .icon {
+    font-size: 2.4rem;
+  }
+
+  .card h2 {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile Devices (≤600px) */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.7rem;
+  }
+
+  header p {
+    font-size: 0.9rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    padding: 20px 10px;
+    border-radius: 15px;
+  }
+
+  .icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  .card h2 {
+    font-size: 0.85rem;
+  }
+}
+
+/* Very Small Phones (≤400px) */
+@media (max-width: 400px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .icon {
+    font-size: 1.8rem;
+  }
+
+  .card h2 {
+    font-size: 0.8rem;
+  }
+
+  .card {
+    padding: 15px 10px;
+  }
+}

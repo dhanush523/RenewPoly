@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Entry - RenewPoly</title>
+  <link rel="stylesheet" href="expense.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+  <header>
+    <h1>Capture Expense Entry</h1>
+  </header>
+
+  <main class="form-container">
+    <form id="expenseForm">
+      <div class="form-group">
+        <label for="shortName">Short Name of Expense *</label>
+        <input type="text" id="shortName" name="shortName" maxlength="50" placeholder="Enter short name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="expenseType">Expense Type *</label>
+        <select id="expenseType" name="expenseType" required>
+          <option value="">-- Select Expense Type --</option>
+          <option value="Travel">Travel</option>
+          <option value="Supplies">Supplies</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Miscellaneous">Miscellaneous</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount *</label>
+        <input type="number" id="amount" name="amount" min="0.01" step="0.01" placeholder="Enter amount" required>
+      </div>
+
+      <div class="form-group">
+        <label for="comments">Comments</label>
+        <textarea id="comments" name="comments" maxlength="250" placeholder="Optional comments"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="expenseDate">Expense Date</label>
+        <input type="text" id="expenseDate" name="expenseDate" readonly>
+      </div>
+
+      <button type="submit" class="btn">Save Expense</button>
+      <p id="message" class="message"></p>
+    </form>
+  </main>
+
+  <script >
+   // Auto-populate current date
+document.getElementById('expenseDate').value = new Date().toLocaleDateString();
+
+const form = document.getElementById('expenseForm');
+const message = document.getElementById('message');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const shortName = document.getElementById('shortName').value.trim();
+  const expenseType = document.getElementById('expenseType').value;
+  const amount = parseFloat(document.getElementById('amount').value);
+  const comments = document.getElementById('comments').value.trim();
+  const expenseDate = document.getElementById('expenseDate').value;
+
+  // Validation
+  if (!shortName || shortName.length > 50) {
+    showMessage('Short Name is required (max 50 chars)', true);
+    return;
+  }
+  if (!expenseType) {
+    showMessage('Expense Type is required', true);
+    return;
+  }
+  if (isNaN(amount) || amount <= 0) {
+    showMessage('Amount must be a positive number', true);
+    return;
+  }
+  if (comments.length > 250) {
+    showMessage('Comments cannot exceed 250 characters', true);
+    return;
+  }
+
+  // Save expense to localStorage
+  const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+  expenses.push({ shortName, expenseType, amount, comments, expenseDate });
+  localStorage.setItem('expenses', JSON.stringify(expenses));
+
+  showMessage('Expense saved successfully');
+
+  form.reset();
+  document.getElementById('expenseDate').value = new Date().toLocaleDateString();
+});
+  
+function showMessage(msg, isError = false) {
+  message.textContent = msg;
+  if (isError) {
+    message.classList.add('error');
+  } else {
+    message.classList.remove('error');
+  }
+}
+
+
+
+  </script>
+</body>
+</html>

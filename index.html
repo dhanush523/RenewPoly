@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenewPoly - Home</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+</head>
+<body>
+
+  <header>
+    <h1>RenewPoly</h1>
+    <p>Plastic Recycling Business Management</p>
+  </header>
+
+  <main>
+    <div class="grid">
+
+      <!-- 1. Capture Expense Entry -->
+      <div class="card" tabindex="0" aria-label="Capture Expense Entry" onclick="navigate('expense.html')">
+  <div class="icon icon-expense"><i class="fa-solid fa-receipt"></i></div>
+        <h2>Capture Expense Entry</h2>
+      </div>
+
+      <!-- 2. Capture Buying Transactions -->
+      <div class="card" tabindex="0" aria-label="Capture Buying Transactions" onclick="navigate('buying.html')">
+  <div class="icon icon-buy"><i class="fa-solid fa-cart-shopping"></i></div>
+        <h2>Capture Buying Transactions</h2>
+      </div>
+
+      <!-- 3. Capture Selling Transactions -->
+      <div class="card" tabindex="0" aria-label="Capture Selling Transactions" onclick="navigate('selling.html')">
+  <div class="icon icon-sell"><i class="fa-solid fa-truck"></i></div>
+        <h2>Capture Selling Transactions</h2>
+      </div>
+
+      <!-- 4. Add a Seller -->
+      <div class="card" tabindex="0" aria-label="Add a Seller" onclick="navigate('seller.html')">
+  <div class="icon icon-seller"><i class="fa-solid fa-user-plus"></i></div>
+        <h2>Add a Seller</h2>
+      </div>
+
+      <!-- 5. Add a Buyer -->
+      <div class="card" tabindex="0" aria-label="Add a Buyer" onclick="navigate('buyer.html')">
+  <div class="icon icon-buyer"><i class="fa-solid fa-user-check"></i></div>
+        <h2>Add a Buyer</h2>
+      </div>
+
+      <!-- 6. Dashboard Reporting -->
+      <div class="card" tabindex="0" aria-label="Single Dashboard Reporting" onclick="navigate('dashboard.html')">
+  <div class="icon icon-dashboard"><i class="fa-solid fa-chart-line"></i></div>
+        <h2>Single Dashboard Reporting</h2>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
