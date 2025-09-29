@@ -52,8 +52,10 @@
   </main>
 
   <script >
-   // Auto-populate current date
-document.getElementById('expenseDate').value = new Date().toLocaleDateString();
+  // Auto-populate current date in YYYY-MM-DD format
+const dateInput = document.getElementById('expenseDate');
+const today = new Date();
+dateInput.value = today.toISOString().split('T')[0];
 
 const form = document.getElementById('expenseForm');
 const message = document.getElementById('message');
@@ -93,9 +95,9 @@ form.addEventListener('submit', function(e) {
   showMessage('Expense saved successfully');
 
   form.reset();
-  document.getElementById('expenseDate').value = new Date().toLocaleDateString();
+  dateInput.value = today.toISOString().split('T')[0]; // Reset date after form submit
 });
-  
+
 function showMessage(msg, isError = false) {
   message.textContent = msg;
   if (isError) {
