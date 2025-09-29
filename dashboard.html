@@ -12,6 +12,7 @@
     <h1>RenewPoly Dashboard</h1>
   </header>
 
+  <!-- Navigation Tabs -->
   <nav class="dashboard-nav">
     <button class="tab-btn active" data-report="buy-monthly">Monthly Buy</button>
     <button class="tab-btn" data-report="buy-ytd">YTD Buy</button>
@@ -25,7 +26,7 @@
   </nav>
 
   <main class="dashboard-widgets">
-    <!-- Widget templates -->
+    <!-- BUY Reports -->
     <div class="widget" id="buy-monthly">
       <h2>Monthly Buy Report</h2>
       <table>
@@ -71,7 +72,7 @@
       </table>
     </div>
 
-    <!-- Repeat same structure for sell and expense widgets -->
+    <!-- SELL Reports -->
     <div class="widget" id="sell-monthly">
       <h2>Monthly Sell Report</h2>
       <table>
@@ -117,50 +118,53 @@
       </table>
     </div>
 
+    <!-- EXPENSE Reports -->
     <div class="widget" id="expense-monthly">
-  <h2>Monthly Expense Report</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Expense Type</th>
-        <th>Total Amount</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
+      <h2>Monthly Expense Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Expense Type</th>
+            <th>Total Amount</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-<div class="widget" id="expense-ytd">
-  <h2>YTD Expense Report</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Month</th>
-        <th>Expense Type</th>
-        <th>Total Amount</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
+    <div class="widget" id="expense-ytd">
+      <h2>YTD Expense Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Expense Type</th>
+            <th>Total Amount</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-<div class="widget" id="expense-full">
+    <div class="widget" id="expense-full">
+      <h2>Full Expense Report</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Month</th>
+            <th>Expense Type</th>
+            <th>Total Amount</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
   
-  <table>
-    <thead>
-      <tr>
-        <th>Year</th>
-        <th>Month</th>
-        <th>Expense Type</th>
-        <th>Total Amount</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
-
-  <script >
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const tabs = document.querySelectorAll('.tab-btn');
   const widgets = document.querySelectorAll('.widget');
 
@@ -173,33 +177,44 @@
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const reportId = tab.getAttribute('data-report');
-
-      // Toggle active tab
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-
-      // Show selected widget
       widgets.forEach(w => (w.style.display = 'none'));
       const widget = document.getElementById(reportId);
       if (widget) widget.style.display = 'block';
     });
   });
 
-  // Load expenses from localStorage and populate dashboard
+  // ✅ Helper to safely parse date
+  function parseDate(dateStr) {
+    // If already ISO
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return new Date(dateStr);
+    }
+    // Try converting from DD/MM/YYYY to YYYY-MM-DD
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      const [day, month, year] = parts;
+      return new Date(`${year}-${month}-${day}`);
+    }
+    return new Date(dateStr);
+  }
+
   function loadExpenses() {
     const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
     // --- Monthly Report ---
     const monthlyTable = document.querySelector('#expense-monthly tbody');
     monthlyTable.innerHTML = '';
-
     const monthlyData = {};
+
     expenses.forEach(exp => {
-      const date = new Date(exp.expenseDate);
+      const date = parseDate(exp.expenseDate);
+      if (isNaN(date)) return; // skip invalid
+
       const month = date.toLocaleString('default', { month: 'long', year: 'numeric' });
       const key = `${exp.expenseType}|${month}`;
-      if (!monthlyData[key]) monthlyData[key] = 0;
-      monthlyData[key] += parseFloat(exp.amount);
+      monthlyData[key] = (monthlyData[key] || 0) + parseFloat(exp.amount);
     });
 
     for (let key in monthlyData) {
@@ -213,13 +228,14 @@
     const ytdTable = document.querySelector('#expense-ytd tbody');
     ytdTable.innerHTML = '';
     const ytdData = {};
+
     expenses.forEach(exp => {
-      const date = new Date(exp.expenseDate);
+      const date = parseDate(exp.expenseDate);
+      if (isNaN(date)) return;
       const year = date.getFullYear();
       const month = date.toLocaleString('default', { month: 'long' });
       const key = `${year}-${month}|${exp.expenseType}`;
-      if (!ytdData[key]) ytdData[key] = 0;
-      ytdData[key] += parseFloat(exp.amount);
+      ytdData[key] = (ytdData[key] || 0) + parseFloat(exp.amount);
     });
 
     for (let key in ytdData) {
@@ -234,13 +250,14 @@
     const fullTable = document.querySelector('#expense-full tbody');
     fullTable.innerHTML = '';
     const fullData = {};
+
     expenses.forEach(exp => {
-      const date = new Date(exp.expenseDate);
+      const date = parseDate(exp.expenseDate);
+      if (isNaN(date)) return;
       const year = date.getFullYear();
       const month = date.toLocaleString('default', { month: 'long' });
       const key = `${year}-${month}|${exp.expenseType}`;
-      if (!fullData[key]) fullData[key] = 0;
-      fullData[key] += parseFloat(exp.amount);
+      fullData[key] = (fullData[key] || 0) + parseFloat(exp.amount);
     });
 
     for (let key in fullData) {
@@ -253,16 +270,10 @@
   }
 
   loadExpenses();
-
-  // Optional: update dashboard live when navigating from expense page
   window.addEventListener('storage', loadExpenses);
 });
 
 
-
-
-
-
-</script>
+  </script>
 </body>
 </html>
