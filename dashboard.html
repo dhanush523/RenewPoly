@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - RenewPoly</title>
   <link rel="stylesheet" href="dashboard.css">
+  <!-- <script src="dashboard.js"></script> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -162,7 +163,28 @@
     </div>
   </main>
 
-  <script>
+
+
+  <!-- -------delete-------------- -->
+  <div class="d">
+  <button id="deleteAllBtn" class="delete-btn">
+    <i class="fa fa-trash"></i> Delete All Data
+  </button>
+</div>
+
+
+
+  
+</body>
+</html>
+
+
+
+
+
+<!-- ---------------------------------------------------------------------------------------------------------- -->
+
+<script>
   
 document.addEventListener('DOMContentLoaded', () => {
   const tabs = document.querySelectorAll('.tab-btn');
@@ -274,6 +296,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+
+    // 🗑️ DELETE ALL DATA BUTTON
+  const deleteBtn = document.getElementById('deleteAllBtn');
+  deleteBtn.addEventListener('click', () => {
+    const confirmDelete = confirm('Are you sure you want to delete ALL data from the dashboard?');
+    if (confirmDelete) {
+      // 1️⃣ Clear all localStorage data
+      localStorage.clear();
+
+      // 2️⃣ Clear all table bodies in dashboard
+      const tables = document.querySelectorAll('table tbody');
+      tables.forEach(tbody => {
+        tbody.innerHTML = '';
+      });
+
+      alert('✅ All data has been deleted from dashboard.');
+    }
+  });
+
+
   </script>
-</body>
-</html>
+
+
+
+<!-- ---------------------------------------------------------------------------------------------------------- -->

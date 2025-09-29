@@ -6,7 +6,8 @@ body {
 }
 
 header {
-  color: rgb(7, 7, 7);
+  background: #4CAF50;
+  color: white;
   text-align: center;
   padding: 1rem;
 }
@@ -33,6 +34,7 @@ label {
 input[type="text"],
 input[type="number"],
 select,
+/* input[type="date"], */
 textarea {
   width: 100%;
   padding: 0.5rem;
