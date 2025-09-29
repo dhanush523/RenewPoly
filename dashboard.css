@@ -140,3 +140,44 @@ table th {
     overflow-x: auto;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Table container for horizontal scroll */
+.table-container {
+  width: 100%;
+  overflow-x: auto;  /* Enables horizontal scroll if needed */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px; /* Ensure table doesn’t shrink too much */
+}
+
+table th, table td {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+table th {
+  background: #f0f0f0;
+}
+
+/* Optional: smaller font on mobile */
+@media (max-width: 480px) {
+  table th, table td {
+    font-size: 0.8rem;
+    padding: 0.3rem;
+  }
+}
