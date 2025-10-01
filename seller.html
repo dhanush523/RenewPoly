@@ -3,46 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Seller</title>
+  <title>Add Seller Information</title>
   <link rel="stylesheet" href="seller.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Add New Seller</h1>
+
+  <header>Add Seller Information</header>
+
+  <div class="form-container">
     <form id="sellerForm">
-      <label>Company Name:</label>
-      <input type="text" id="companyName" required>
+      <label>Company Name *</label>
+      <input type="text" id="companyName" placeholder="Enter company name">
+      <div class="error" id="companyError">Company name is required and must be unique.</div>
 
-      <label>Contact Person:</label>
-      <input type="text" id="contactPerson">
+      <label>Contact Person</label>
+      <input type="text" id="contactPerson" placeholder="Enter contact person">
 
-      <label>Mobile Number:</label>
-      <input type="text" id="mobileNumber" required maxlength="10">
+      <label>Mobile Number *</label>
+      <input type="text" id="mobileNumber" placeholder="Enter 10-digit mobile number">
+      <div class="error" id="mobileError">Mobile number must be exactly 10 digits.</div>
 
-      <label>GPay Number:</label>
-      <input type="text" id="gpayNumber">
+      <label>GPay Number</label>
+      <input type="text" id="gpayNumber" placeholder="Enter GPay number">
 
-      <label>Account Number:</label>
-      <input type="text" id="accountNumber">
+      <label>Account Number</label>
+      <input type="text" id="accountNumber" placeholder="Enter account number">
 
-      <label>GST Number:</label>
-      <input type="text" id="gstNumber">
+      <label>GST Number *</label>
+      <input type="text" id="gstNumber" placeholder="Enter GST number">
+      <div class="error" id="gstError">GST number is required.</div>
 
-      <label>Address:</label>
-      <textarea id="address" required></textarea>
+      <label>Address *</label>
+      <textarea id="address" placeholder="Enter address"></textarea>
+      <div class="error" id="addressError">Address is required.</div>
 
-      <label>Type of Plastics Sold:</label>
-      <input type="text" id="plasticType">
+      <label>Type of Plastics Sold</label>
+      <input type="text" id="plasticType" placeholder="e.g. HDPE, LDPE">
 
-      <button type="submit">Add Seller</button>
+      <button type="submit">Save Seller</button>
     </form>
-
-    <div id="message"></div>
-
-    <!-- <h2>Seller List</h2> -->
-    <ul id="sellerList"></ul>
   </div>
 
-  <script src="app.js"></script>
+  <!-- Table to display sellers -->
+  <!-- <div class="table-container">
+    <table id="sellerTable">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Contact</th>
+          <th>Mobile</th>
+          <th>GPay</th>
+          <th>Account</th>
+          <th>GST</th>
+          <th>Address</th>
+          <th>Plastic Type</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div> -->
+
+  <script>
+    const form = document.getElementById('sellerForm');
+    const tableBody = document.querySelector('#sellerTable tbody');
+    const existingCompanies = [];
+
+    const fields = {
+      company: document.getElementById('companyName'),
+      contact: document.getElementById('contactPerson'),
+      mobile: document.getElementById('mobileNumber'),
+      gpay: document.getElementById('gpayNumber'),
+      account: document.getElementById('accountNumber'),
+      gst: document.getElementById('gstNumber'),
+      address: document.getElementById('address'),
+      plastic: document.getElementById('plasticType'),
+    };
+
+    const errors = {
+      company: document.getElementById('companyError'),
+      mobile: document.getElementById('mobileError'),
+      gst: document.getElementById('gstError'),
+      address: document.getElementById('addressError'),
+    };
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let valid = true;
+
+      // Company name validation
+      const companyValue = fields.company.value.trim();
+      if (companyValue === '' || existingCompanies.includes(companyValue.toLowerCase())) {
+        errors.company.style.display = 'block';
+        valid = false;
+      } else {
+        errors.company.style.display = 'none';
+      }
+
+      // Mobile number validation
+      if (!/^\d{10}$/.test(fields.mobile.value.trim())) {
+        errors.mobile.style.display = 'block';
+        valid = false;
+      } else {
+        errors.mobile.style.display = 'none';
+      }
+
+      // GST validation
+      if (fields.gst.value.trim() === '') {
+        errors.gst.style.display = 'block';
+        valid = false;
+      } else {
+        errors.gst.style.display = 'none';
+      }
+
+      // Address validation
+      if (fields.address.value.trim() === '') {
+        errors.address.style.display = 'block';
+        valid = false;
+      } else {
+        errors.address.style.display = 'none';
+      }
+
+      if (valid) {
+        existingCompanies.push(companyValue.toLowerCase());
+        addRowToTable();
+        form.reset();
+      }
+    });
+
+    // function addRowToTable() {
+    //   const row = document.createElement('tr');
+    //   row.innerHTML = `
+    //     <td>${fields.company.value}</td>
+    //     <td>${fields.contact.value}</td>
+    //     <td>${fields.mobile.value}</td>
+    //     <td>${fields.gpay.value}</td>
+    //     <td>${fields.account.value}</td>
+    //     <td>${fields.gst.value}</td>
+    //     <td>${fields.address.value}</td>
+    //     <td>${fields.plastic.value}</td>
+    //   `;
+    //   tableBody.appendChild(row);
+    // }
+  </script>
+
 </body>
 </html>

@@ -122,45 +122,80 @@ table th {
   }
 }
 
-/* Mobile (≤ 480px) */
+/* ✅ Improved Mobile (≤ 480px) */
 @media (max-width: 480px) {
+  body {
+    font-size: 14px; /* slightly smaller base font */
+  }
+
   header {
-    padding: 0.8rem;
-    font-size: 1rem;
+    padding: 0.6rem;
+    font-size: 0.95rem;
   }
 
   .dashboard-nav {
+    flex-direction: column;
+    align-items: stretch;
     padding: 0.5rem;
+    gap: 0.4rem;
   }
 
   .tab-btn {
+    width: 100%;
     font-size: 0.85rem;
-    padding: 0.4rem;
+    padding: 0.45rem 0.5rem;
     border-radius: 6px;
+    text-align: center;
   }
 
   .dashboard-widgets {
-    padding: 0.5rem;
-    gap: 0.5rem;
+    padding: 0.4rem;
+    gap: 0.6rem;
   }
 
   .widget {
     width: 100%;
-    padding: 0.8rem;
+    padding: 0.6rem;
     border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    overflow-x: auto; /* allows tables to scroll nicely */
+  }
+
+  .widget h2 {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ✅ Tables scroll smoothly on small screens */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* iOS smooth scroll */
+  }
+
+  table {
+    min-width: 320px; /* smaller to fit narrow phones */
   }
 
   table th,
   table td {
-    font-size: 0.8rem;
-    padding: 0.3rem;
+    font-size: 0.75rem;
+    padding: 0.25rem;
+    white-space: nowrap; /* keeps content in one line */
   }
 
-  table {
-    min-width: 400px;
+  /* ✅ Center delete button better */
+  .d {
+    padding: 6px 0;
+  }
+
+  .delete-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px;
+    font-size: 13px;
   }
 }
-
 
 
 
