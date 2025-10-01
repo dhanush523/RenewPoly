@@ -317,6 +317,242 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+
+
+function renderBuyReports(){
+  const transactions = JSON.parse(localStorage.getItem('buyingTransactions')||'[]');
+
+  // --- Monthly Buy Report ---
+  const monthlyTable = document.querySelector('#buy-monthly tbody');
+  monthlyTable.innerHTML = '';
+  const monthlyData = {};
+
+  transactions.forEach(t=>{
+    const month = new Date(t.buyingDate).toLocaleString('default',{month:'long', year:'numeric'});
+    const key = `${t.plasticType}|${month}`;
+    if(!monthlyData[key]) monthlyData[key] = {totalQty:0, totalPrice:0};
+    monthlyData[key].totalQty += t.totalQty;
+    monthlyData[key].totalPrice += t.price;
+  });
+
+  for(let key in monthlyData){
+    const [plastic, month] = key.split('|');
+    const avgPrice = monthlyData[key].totalPrice / monthlyData[key].totalQty;
+    const row = `<tr><td>${plastic}</td><td>${monthlyData[key].totalQty.toFixed(2)}</td><td>${avgPrice.toFixed(2)}</td></tr>`;
+    monthlyTable.innerHTML += row;
+  }
+
+  // --- YTD Buy Report ---
+  const ytdTable = document.querySelector('#buy-ytd tbody');
+  ytdTable.innerHTML = '';
+  const ytdData = {};
+  transactions.forEach(t=>{
+    const date = new Date(t.buyingDate);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('default',{month:'long'});
+    const key = `${year}-${month}|${t.plasticType}`;
+    if(!ytdData[key]) ytdData[key] = {totalQty:0, totalPrice:0};
+    ytdData[key].totalQty += t.totalQty;
+    ytdData[key].totalPrice += t.price;
+  });
+
+  for(let key in ytdData){
+    const [ym, plastic] = key.split('|');
+    const [year, month] = ym.split('-');
+    const avgPrice = ytdData[key].totalPrice / ytdData[key].totalQty;
+    const row = `<tr><td>${month}</td><td>${plastic}</td><td>${ytdData[key].totalQty.toFixed(2)}</td><td>${avgPrice.toFixed(2)}</td></tr>`;
+    ytdTable.innerHTML += row;
+  }
+
+  // --- Full Buy Report ---
+  const fullTable = document.querySelector('#buy-full tbody');
+  fullTable.innerHTML = '';
+  const fullData = {};
+  transactions.forEach(t=>{
+    const date = new Date(t.buyingDate);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('default',{month:'long'});
+    const key = `${year}-${month}|${t.plasticType}`;
+    if(!fullData[key]) fullData[key] = {totalQty:0, totalPrice:0};
+    fullData[key].totalQty += t.totalQty;
+    fullData[key].totalPrice += t.price;
+  });
+
+  for(let key in fullData){
+    const [ym, plastic] = key.split('|');
+    const [year, month] = ym.split('-');
+    const avgPrice = fullData[key].totalPrice / fullData[key].totalQty;
+    const row = `<tr><td>${year}</td><td>${month}</td><td>${plastic}</td><td>${fullData[key].totalQty.toFixed(2)}</td><td>${avgPrice.toFixed(2)}</td></tr>`;
+    fullTable.innerHTML += row;
+  }
+}
+
+// Call render function when dashboard loads
+renderBuyReports();
+
+// Optional: update dashboard if Local Storage changes
+window.addEventListener('storage', renderBuyReports);
+
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const transactions = JSON.parse(localStorage.getItem('sellingTransactions')) || [];
+
+  const sellMonthlyTbody = document.querySelector("#sell-monthly tbody");
+  const sellYtdTbody = document.querySelector("#sell-ytd tbody");
+  const sellFullTbody = document.querySelector("#sell-full tbody");
+
+  // Helper: Group by key
+  function groupBy(array, keyFunc) {
+    return array.reduce((result, item) => {
+      const key = keyFunc(item);
+      if (!result[key]) result[key] = [];
+      result[key].push(item);
+      return result;
+    }, {});
+  }
+
+  // --- Monthly Sell Report (Total by Plastic Type) ---
+  // Assuming you have "plasticType" in each transaction
+  const monthlyGroups = groupBy(transactions, t => t.plasticType || 'Unknown');
+  for (const [plasticType, items] of Object.entries(monthlyGroups)) {
+    const totalQty = items.reduce((sum, i) => sum + i.soldQty, 0);
+    const avgPrice = items.reduce((sum, i) => sum + i.soldPriceActual, 0) / items.length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${plasticType}</td><td>${totalQty}</td><td>${avgPrice.toFixed(2)}</td>`;
+    sellMonthlyTbody.appendChild(tr);
+  }
+
+  // --- YTD Sell Report (Grouped by Month & Plastic Type) ---
+  const currentYear = new Date().getFullYear();
+  const ytdGroups = transactions
+    .filter(t => new Date(t.sellingDate).getFullYear() === currentYear)
+    .reduce((acc, t) => {
+      const month = new Date(t.sellingDate).toLocaleString('default', { month: 'short' });
+      const key = `${month}-${t.plasticType || 'Unknown'}`;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(t);
+      return acc;
+    }, {});
+
+  for (const [key, items] of Object.entries(ytdGroups)) {
+    const [month, plasticType] = key.split('-');
+    const totalQty = items.reduce((sum, i) => sum + i.soldQty, 0);
+    const avgPrice = items.reduce((sum, i) => sum + i.soldPriceActual, 0) / items.length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${month}</td><td>${plasticType}</td><td>${totalQty}</td><td>${avgPrice.toFixed(2)}</td>`;
+    sellYtdTbody.appendChild(tr);
+  }
+
+  // --- Full Sell Report (Grouped by Year, Month & Plastic Type) ---
+  const fullGroups = transactions.reduce((acc, t) => {
+    const date = new Date(t.sellingDate);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('default', { month: 'short' });
+    const key = `${year}-${month}-${t.plasticType || 'Unknown'}`;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(t);
+    return acc;
+  }, {});
+
+  for (const [key, items] of Object.entries(fullGroups)) {
+    const [year, month, plasticType] = key.split('-');
+    const totalQty = items.reduce((sum, i) => sum + i.soldQty, 0);
+    const avgPrice = items.reduce((sum, i) => sum + i.soldPriceActual, 0) / items.length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${year}</td><td>${month}</td><td>${plasticType}</td><td>${totalQty}</td><td>${avgPrice.toFixed(2)}</td>`;
+    sellFullTbody.appendChild(tr);
+  }
+});
+
+
+
+
+
+
+  function renderSellReports() {
+    const transactions = JSON.parse(localStorage.getItem('sellingTransactions') || '[]');
+
+    const sellMonthlyTbody = document.querySelector("#sell-monthly tbody");
+    const sellYtdTbody = document.querySelector("#sell-ytd tbody");
+    const sellFullTbody = document.querySelector("#sell-full tbody");
+
+    // Clear tables
+    sellMonthlyTbody.innerHTML = '';
+    sellYtdTbody.innerHTML = '';
+    sellFullTbody.innerHTML = '';
+
+    // --- Monthly ---
+    const monthlyGroups = {};
+    transactions.forEach(t => {
+        const key = t.plasticType || 'Unknown';
+        if (!monthlyGroups[key]) monthlyGroups[key] = { totalQty: 0, totalPrice: 0, count: 0 };
+        monthlyGroups[key].totalQty += t.soldQty;
+        monthlyGroups[key].totalPrice += t.soldPriceActual;
+        monthlyGroups[key].count++;
+    });
+    for (const plastic in monthlyGroups) {
+        const data = monthlyGroups[plastic];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${plastic}</td><td>${data.totalQty}</td><td>${(data.totalPrice / data.count).toFixed(2)}</td>`;
+        sellMonthlyTbody.appendChild(tr);
+    }
+
+    // --- YTD ---
+    const currentYear = new Date().getFullYear();
+    const ytdGroups = {};
+    transactions.forEach(t => {
+        const date = new Date(t.sellingDate);
+        if (date.getFullYear() !== currentYear) return;
+        const month = date.toLocaleString('default', { month: 'short' });
+        const key = `${month}-${t.plasticType}`;
+        if (!ytdGroups[key]) ytdGroups[key] = { totalQty: 0, totalPrice: 0, count: 0 };
+        ytdGroups[key].totalQty += t.soldQty;
+        ytdGroups[key].totalPrice += t.soldPriceActual;
+        ytdGroups[key].count++;
+    });
+    for (const key in ytdGroups) {
+        const [month, plastic] = key.split('-');
+        const data = ytdGroups[key];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${month}</td><td>${plastic}</td><td>${data.totalQty}</td><td>${(data.totalPrice / data.count).toFixed(2)}</td>`;
+        sellYtdTbody.appendChild(tr);
+    }
+
+    // --- Full ---
+    const fullGroups = {};
+    transactions.forEach(t => {
+        const date = new Date(t.sellingDate);
+        const year = date.getFullYear();
+        const month = date.toLocaleString('default', { month: 'short' });
+        const key = `${year}-${month}-${t.plasticType}`;
+        if (!fullGroups[key]) fullGroups[key] = { totalQty: 0, totalPrice: 0, count: 0 };
+        fullGroups[key].totalQty += t.soldQty;
+        fullGroups[key].totalPrice += t.soldPriceActual;
+        fullGroups[key].count++;
+    });
+    for (const key in fullGroups) {
+        const [year, month, plastic] = key.split('-');
+        const data = fullGroups[key];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${year}</td><td>${month}</td><td>${plastic}</td><td>${data.totalQty}</td><td>${(data.totalPrice / data.count).toFixed(2)}</td>`;
+        sellFullTbody.appendChild(tr);
+    }
+}
+
+// Call renderSellReports when dashboard loads
+document.addEventListener('DOMContentLoaded', renderSellReports);
+
+// Optional: update if localStorage changes
+window.addEventListener('storage', renderSellReports);
+
   </script>
 
 

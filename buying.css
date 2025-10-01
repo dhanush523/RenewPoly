@@ -1,0 +1,121 @@
+body {
+    font-family: "Segoe UI", Roboto, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+}
+
+header {
+    background: #2e8b57;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input[readonly] {
+    background: #f2f2f2;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 50px;
+}
+
+.row {
+    display: flex;
+    gap: 5%;
+    flex-wrap: wrap;
+}
+
+.row .form-group {
+    flex: 1 1 45%; /* flexible and responsive */
+    min-width: 200px; /* prevent too small on very small screens */
+}
+
+button {
+    padding: 12px;
+    width: 100%;
+    background: #2e8b57;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #256d45;
+}
+
+/* Success message style */
+.success-message {
+    display: none;
+    text-align: center;
+    background: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border: 1px solid #c3e6cb;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 900px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+}
+
+@media(max-width: 700px){
+    .row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .row .form-group {
+        flex: 1 1 100%;
+    }
+}
+
+@media(max-width: 500px){
+    input, select, textarea {
+        font-size: 13px;
+        padding: 8px;
+    }
+    button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

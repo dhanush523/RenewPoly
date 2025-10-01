@@ -3,181 +3,208 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Expense Entry - RenewPoly</title>
-<style>
+  <title>Company Management</title>
+  <style>
     body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f5f5;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  /* background: #4CAF50; */
-  color: rgb(7, 7, 7);
-  text-align: center;
-  padding: 1rem;
-}
-
-.form-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-weight: 600;
-}
-
-input[type="text"],
-input[type="number"],
-select,
-textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-textarea {
-  resize: vertical;
-}
-
-.btn {
-  padding: 0.7rem 1.5rem;
-  border: none;
-  background: #4CAF50;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.btn:hover {
-  background: #45a049;
-}
-
-.message {
-  margin-top: 1rem;
-  font-weight: bold;
-  color: green;
-}
-.message.error {
-  color: red;
-}
-
-</style>  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #4CAF50;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+    #message.success {
+      color: green;
+    }
+    #message.error {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Capture Expense Entry</h1>
-  </header>
 
-  <main class="form-container">
-    <form id="expenseForm">
-      <div class="form-group">
-        <label for="shortName">Short Name of Expense *</label>
-        <input type="text" id="shortName" name="shortName" maxlength="50" placeholder="Enter short name" required>
-      </div>
+<div class="container">
+  <h1>Company Management</h1>
+  <form id="companyForm">
+    <div class="form-group">
+      <label for="companyName">Company Name *</label>
+      <input type="text" id="companyName" maxlength="100" required>
+    </div>
 
-      <div class="form-group">
-        <label for="expenseType">Expense Type *</label>
-        <select id="expenseType" name="expenseType" required>
-          <option value="">-- Select Expense Type --</option>
-          <option value="Travel">Travel</option>
-          <option value="Supplies">Supplies</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Maintenance">Maintenance</option>
-          <option value="Miscellaneous">Miscellaneous</option>
-        </select>
-      </div>
+    <div class="form-group">
+      <label for="ownerNames">Owner Names *</label>
+      <input type="text" id="ownerNames" required>
+    </div>
 
-      <div class="form-group">
-        <label for="amount">Amount *</label>
-        <input type="number" id="amount" name="amount" min="0.01" step="0.01" placeholder="Enter amount" required>
-      </div>
+    <div class="form-group">
+      <label for="companyAddress">Company Address *</label>
+      <input type="text" id="companyAddress" required>
+    </div>
 
-      <div class="form-group">
-        <label for="comments">Comments</label>
-        <textarea id="comments" name="comments" maxlength="250" placeholder="Optional comments"></textarea>
-      </div>
+    <div class="form-group">
+      <label for="contactPerson">Contact Person *</label>
+      <input type="text" id="contactPerson" required>
+    </div>
 
-      <div class="form-group">
-        <label for="expenseDate">Expense Date</label>
-        <input type="text" id="expenseDate" name="expenseDate" readonly>
-      </div>
+    <div class="form-group">
+      <label for="contactDetails">Contact Details (Phone & Email) *</label>
+      <input type="text" id="contactDetails" placeholder="phone,email" required>
+    </div>
 
-      <button type="submit" class="btn">Save Expense</button>
-      <p id="message" class="message"></p>
-    </form>
-  </main>
+    <div class="form-group">
+      <label for="accountDetails">Account Details (Bank Info) *</label>
+      <input type="text" id="accountDetails" required>
+    </div>
 
-  <script >
-   // Auto-populate current date
-document.getElementById('expenseDate').value = new Date().toLocaleDateString();
+    <div class="form-group">
+      <label for="gstNumber">GST Number *</label>
+      <input type="text" id="gstNumber" placeholder="e.g., 22AAAAA0000A1Z5" required>
+    </div>
 
-const form = document.getElementById('expenseForm');
-const message = document.getElementById('message');
+    <div class="form-group">
+      <label for="emergencyContact">Emergency Contact Number *</label>
+      <input type="tel" id="emergencyContact" required>
+    </div>
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
+    <button type="submit">Add Company</button>
+    <div id="message"></div>
+  </form>
+</div>
 
-  const shortName = document.getElementById('shortName').value.trim();
-  const expenseType = document.getElementById('expenseType').value;
-  const amount = parseFloat(document.getElementById('amount').value);
-  const comments = document.getElementById('comments').value.trim();
-  const expenseDate = document.getElementById('expenseDate').value;
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('companyForm');
+  const message = document.getElementById('message');
 
-  // Validation
-  if (!shortName || shortName.length > 50) {
-    showMessage('Short Name is required (max 50 chars)', true);
-    return;
-  }
-  if (!expenseType) {
-    showMessage('Expense Type is required', true);
-    return;
-  }
-  if (isNaN(amount) || amount <= 0) {
-    showMessage('Amount must be a positive number', true);
-    return;
-  }
-  if (comments.length > 250) {
-    showMessage('Comments cannot exceed 250 characters', true);
-    return;
+  function validatePhone(phone) {
+    return /^\d{10}$/.test(phone);
   }
 
-  // Save expense to localStorage
-  const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-  expenses.push({ shortName, expenseType, amount, comments, expenseDate });
-  localStorage.setItem('expenses', JSON.stringify(expenses));
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
 
-  showMessage('Expense saved successfully');
+  function validateGST(gst) {
+    return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(gst);
+  }
 
-  form.reset();
-  document.getElementById('expenseDate').value = new Date().toLocaleDateString();
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    message.textContent = '';
+    message.className = '';
+
+    const companyName = document.getElementById('companyName').value.trim();
+    const ownerNames = document.getElementById('ownerNames').value.trim();
+    const companyAddress = document.getElementById('companyAddress').value.trim();
+    const contactPerson = document.getElementById('contactPerson').value.trim();
+    const contactDetails = document.getElementById('contactDetails').value.trim();
+    const accountDetails = document.getElementById('accountDetails').value.trim();
+    const gstNumber = document.getElementById('gstNumber').value.trim();
+    const emergencyContact = document.getElementById('emergencyContact').value.trim();
+
+    // Validate required fields
+    if (!companyName || !ownerNames || !companyAddress || !contactPerson || !contactDetails || !accountDetails || !gstNumber || !emergencyContact) {
+      message.textContent = 'All fields are required!';
+      message.className = 'error';
+      return;
+    }
+
+    // Validate phone & email in contactDetails
+    const [phone, email] = contactDetails.split(',');
+    if (!validatePhone(phone) || !validateEmail(email)) {
+      message.textContent = 'Contact Details must include valid phone and email, separated by comma.';
+      message.className = 'error';
+      return;
+    }
+
+    // Validate emergency contact
+    if (!validatePhone(emergencyContact)) {
+      message.textContent = 'Emergency Contact must be a valid 10-digit number.';
+      message.className = 'error';
+      return;
+    }
+
+    // Validate GST number
+    if (!validateGST(gstNumber)) {
+      message.textContent = 'GST Number is invalid.';
+      message.className = 'error';
+      return;
+    }
+
+    // Validate uniqueness of company name
+    let companies = JSON.parse(localStorage.getItem('companies') || '[]');
+    if (companies.some(c => c.companyName.toLowerCase() === companyName.toLowerCase())) {
+      message.textContent = 'Company Name must be unique.';
+      message.className = 'error';
+      return;
+    }
+
+    // Save company
+    const company = {
+      companyName,
+      ownerNames,
+      companyAddress,
+      contactPerson,
+      contactDetails,
+      accountDetails,
+      gstNumber,
+      emergencyContact
+    };
+
+    companies.push(company);
+    localStorage.setItem('companies', JSON.stringify(companies));
+
+    message.textContent = 'Company added successfully!';
+    message.className = 'success';
+
+    form.reset();
+  });
 });
-  
-function showMessage(msg, isError = false) {
-  message.textContent = msg;
-  if (isError) {
-    message.classList.add('error');
-  } else {
-    message.classList.remove('error');
-  }
-}
+</script>
 
-
-
-  </script>
 </body>
 </html>

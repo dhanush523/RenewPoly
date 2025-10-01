@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capture Selling Transaction</title>
+  <link rel="stylesheet" href="selling.css">
+</head>
+<body>
+    <header>
+    <h1>
+selling Transaction
+</h1>
+  </header>
+
+  <div class="container">
+    <form id="sellingForm">
+      <div class="form-group">
+        <label for="companyName">Company Name *</label>
+        <input type="text" id="companyName" name="companyName" maxlength="100" required>
+      </div>
+
+      <div class="form-group">
+        <label for="plasticType">Plastic Type</label>
+        <input type="text" id="plasticType" name="plasticType" placeholder="Optional">
+      </div>
+
+      <div class="form-group">
+        <label for="soldQty">Sold Quantity *</label>
+        <input type="number" id="soldQty" name="soldQty" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="soldPriceProjected">Sold Price Projected *</label>
+        <input type="number" id="soldPriceProjected" name="soldPriceProjected" min="0.01" step="0.01" required>
+      </div>
+
+      <div class="form-group">
+        <label for="soldPriceActual">Sold Price Actual *</label>
+        <input type="number" id="soldPriceActual" name="soldPriceActual" min="0.01" step="0.01" required>
+      </div>
+
+      <div class="form-group">
+        <label for="projectedAmount">Projected Amount</label>
+        <input type="text" id="projectedAmount" name="projectedAmount" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="actualAmount">Actual Amount</label>
+        <input type="text" id="actualAmount" name="actualAmount" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="gstAmount">GST Amount</label>
+        <input type="number" id="gstAmount" name="gstAmount" min="0" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label for="sellingDate">Selling Date</label>
+        <input type="text" id="sellingDate" name="sellingDate" readonly>
+      </div>
+
+      <button type="submit">Save Transaction</button>
+      <div id="message"></div>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sellingForm = document.getElementById("sellingForm");
+      const soldQty = document.getElementById("soldQty");
+      const soldPriceProjected = document.getElementById("soldPriceProjected");
+      const soldPriceActual = document.getElementById("soldPriceActual");
+      const projectedAmount = document.getElementById("projectedAmount");
+      const actualAmount = document.getElementById("actualAmount");
+      const sellingDate = document.getElementById("sellingDate");
+      const message = document.getElementById("message");
+
+      // Auto-fill today's date
+      const today = new Date().toISOString().split('T')[0];
+      sellingDate.value = today;
+
+      // Auto-calculate amounts
+      function calculateAmounts() {
+        const qty = parseFloat(soldQty.value);
+        const priceProj = parseFloat(soldPriceProjected.value);
+        const priceAct = parseFloat(soldPriceActual.value);
+
+        projectedAmount.value = (qty && priceProj) ? (qty * priceProj).toFixed(2) : '';
+        actualAmount.value = (qty && priceAct) ? (qty * priceAct).toFixed(2) : '';
+      }
+
+      soldQty.addEventListener("input", calculateAmounts);
+      soldPriceProjected.addEventListener("input", calculateAmounts);
+      soldPriceActual.addEventListener("input", calculateAmounts);
+
+      // Form submission
+      sellingForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        message.textContent = '';
+        message.className = '';
+
+        const companyName = document.getElementById("companyName").value.trim();
+        const plasticType = document.getElementById("plasticType").value.trim() || "Unknown";
+        const qty = parseFloat(soldQty.value);
+        const priceProj = parseFloat(soldPriceProjected.value);
+        const priceAct = parseFloat(soldPriceActual.value);
+        const projAmount = parseFloat(projectedAmount.value) || 0;
+        const actAmount = parseFloat(actualAmount.value) || 0;
+        const gstAmount = parseFloat(document.getElementById("gstAmount").value) || 0;
+        const sellDate = sellingDate.value;
+
+        // Validations
+        if (!companyName || companyName.length > 100) {
+          message.textContent = 'Company Name is required and should be <= 100 characters.';
+          message.className = 'error';
+          return;
+        }
+        if (qty <= 0) {
+          message.textContent = 'Sold Quantity must be positive.';
+          message.className = 'error';
+          return;
+        }
+        if (priceProj <= 0 || priceAct <= 0) {
+          message.textContent = 'Sold Prices must be positive numbers.';
+          message.className = 'error';
+          return;
+        }
+
+        // Save to localStorage
+        const transaction = {
+          companyName,
+          plasticType,
+          soldQty: qty,
+          soldPriceProjected: priceProj,
+          soldPriceActual: priceAct,
+          projectedAmount: projAmount,
+          actualAmount: actAmount,
+          gstAmount,
+          sellingDate: sellDate
+        };
+
+        let transactions = JSON.parse(localStorage.getItem('sellingTransactions')) || [];
+        transactions.push(transaction);
+        localStorage.setItem('sellingTransactions', JSON.stringify(transactions));
+
+        message.textContent = 'Transaction saved successfully!';
+        message.className = 'success';
+
+        // Reset form but keep date
+        sellingForm.reset();
+        sellingDate.value = today;
+      });
+    });
+  </script>
+</body>
+</html>

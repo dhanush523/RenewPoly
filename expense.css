@@ -6,11 +6,11 @@ body {
 }
 
 header {
-  background: #4CAF50;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-}
+      background: #2e8b57;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
 
 .form-container {
   max-width: 500px;
@@ -51,7 +51,7 @@ textarea {
 .btn {
   padding: 0.7rem 1.5rem;
   border: none;
-  background: #4CAF50;
+      background: #2e8b57;
   color: white;
   border-radius: 8px;
   cursor: pointer;
@@ -60,7 +60,7 @@ textarea {
 }
 
 .btn:hover {
-  background: #45a049;
+      background: #256d45;
 }
 
 .message {

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buying Transaction - RenewPoly</title>
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> -->
+<link rel="stylesheet" href="buying.css">
+</head>
+<body>
+ <header>
+<h1>Buying Transaction</h1>  
+</header>
+
+<div class="container">
+
+  <form id="buyingForm">
+    <div class="form-group">
+      <label for="companyName">Company Name *</label>
+      <input type="text" id="companyName" required>
+    </div>
+
+    <div class="form-group">
+      <label for="plasticType">Type of Plastics *</label>
+      <select id="plasticType" required>
+        <option value="">--Select--</option>
+        <option>HDPE</option>
+        <option>LDPE</option>
+        <option>PP</option>
+        <option>PET</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="paymentMode">Payment Mode *</label>
+      <select id="paymentMode" required>
+        <option value="">--Select--</option>
+        <option>Cash</option>
+        <option>Bank Transfer</option>
+        <option>UPI</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="totalQty">Total Quantity (Kg) *</label>
+        <input type="number" id="totalQty" required>
+      </div>
+      <div class="form-group">
+        <label for="netQty">Net Quantity (Kg) *</label>
+        <input type="number" id="netQty" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="price">Price (₹) *</label>
+        <input type="number" id="price" required>
+      </div>
+      <div class="form-group">
+        <label for="netCost">Net Buying Cost (₹)</label>
+        <input type="number" id="netCost" readonly>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="transport">Transport Cost (₹)</label>
+      <input type="number" id="transport" value="0">
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="weighment">Weighment Cost (₹)</label>
+        <input type="number" id="weighment" value="0">
+      </div>
+      <div class="form-group">
+        <label for="food">Food Cost (₹)</label>
+        <input type="number" id="food" value="0">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="fuel">Fuel Cost (₹)</label>
+        <input type="number" id="fuel" value="0">
+      </div>
+      <div class="form-group">
+        <label for="toll">Toll Cost (₹)</label>
+        <input type="number" id="toll" value="0">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="worker">Transportation Cost for Worker (₹)</label>
+      <input type="number" id="worker" value="0">
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="totalCost">Total Buying Cost (₹)</label>
+        <input type="number" id="totalCost" readonly>
+      </div>
+      <div class="form-group">
+        <label for="costPerKg">Cost per Kg (₹)</label>
+        <input type="number" id="costPerKg" readonly>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="buyingDate">Buying Date</label>
+      <input type="date" id="buyingDate" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="comments">Comments</label>
+      <textarea id="comments" placeholder="Enter any notes..."></textarea>
+    </div>
+  <div id="successMsg" class="success-message">Transaction saved successfully!</div>
+
+    <button type="submit">💾 Save Transaction</button>
+  </form>
+</div>
+
+<script>
+  // Auto-fill date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('buyingDate').value = today;
+
+  const inputsToWatch = ['netQty','price','transport','weighment','food','fuel','toll','worker','totalQty'];
+  inputsToWatch.forEach(id => {
+    document.getElementById(id).addEventListener('input', calculateCosts);
+  });
+
+  function calculateCosts(){
+    const netQty = parseFloat(document.getElementById('netQty').value) || 0;
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const totalQty = parseFloat(document.getElementById('totalQty').value) || 0;
+    const transport = parseFloat(document.getElementById('transport').value) || 0;
+    const weighment = parseFloat(document.getElementById('weighment').value) || 0;
+    const food = parseFloat(document.getElementById('food').value) || 0;
+    const fuel = parseFloat(document.getElementById('fuel').value) || 0;
+    const toll = parseFloat(document.getElementById('toll').value) || 0;
+    const worker = parseFloat(document.getElementById('worker').value) || 0;
+
+    const netCost = netQty * price;
+    document.getElementById('netCost').value = netCost.toFixed(2);
+
+    const totalCost = netCost + transport + weighment + food + fuel + toll + worker;
+    document.getElementById('totalCost').value = totalCost.toFixed(2);
+
+    const costPerKg = totalQty > 0 ? totalCost / totalQty : 0;
+    document.getElementById('costPerKg').value = costPerKg.toFixed(2);
+  }
+
+  // Save transaction
+  document.getElementById('buyingForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const transaction = {
+      companyName: document.getElementById('companyName').value,
+      plasticType: document.getElementById('plasticType').value,
+      paymentMode: document.getElementById('paymentMode').value,
+      totalQty: parseFloat(document.getElementById('totalQty').value),
+      netQty: parseFloat(document.getElementById('netQty').value),
+      price: parseFloat(document.getElementById('price').value),
+      netCost: parseFloat(document.getElementById('netCost').value),
+      totalCost: parseFloat(document.getElementById('totalCost').value),
+      costPerKg: parseFloat(document.getElementById('costPerKg').value),
+      transport: parseFloat(document.getElementById('transport').value),
+      weighment: parseFloat(document.getElementById('weighment').value),
+      food: parseFloat(document.getElementById('food').value),
+      fuel: parseFloat(document.getElementById('fuel').value),
+      toll: parseFloat(document.getElementById('toll').value),
+      worker: parseFloat(document.getElementById('worker').value),
+      buyingDate: document.getElementById('buyingDate').value,
+      comments: document.getElementById('comments').value
+    };
+
+    const transactions = JSON.parse(localStorage.getItem('buyingTransactions') || '[]');
+    transactions.push(transaction);
+    localStorage.setItem('buyingTransactions', JSON.stringify(transactions));
+
+    // Show success message
+    const msg = document.getElementById('successMsg');
+    msg.style.display = 'block';
+    setTimeout(()=>{ msg.style.display='none'; }, 3000);
+
+    this.reset();
+    document.getElementById('buyingDate').value = today;
+    calculateCosts();
+  });
+</script>
+</body>
+</html>
